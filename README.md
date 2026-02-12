@@ -30,7 +30,7 @@ Unlike traditional AI assistants that just describe code, CodeGuru:
 ```bash
 # 1. Get free API key from console.groq.com (no credit card!)
 # 2. Clone and setup
-git clone https://github.com/yourusername/CodeGuru.git
+git clone https://github.com/Govardhanacharivadla/CodeGuru.git
 cd CodeGuru/explainer-agent
 pip install -r requirements.txt
 
@@ -286,9 +286,9 @@ Built with the belief that:
 
 ## 📞 Support & Feedback
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/CodeGuru/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/CodeGuru/discussions)
-- **Email**: your.email@example.com
+- **Issues**: [GitHub Issues](https://github.com/Govardhanacharivadla/CodeGuru/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Govardhanacharivadla/CodeGuru/discussions)
+- **GitHub**: [@Govardhanacharivadla](https://github.com/Govardhanacharivadla)
 
 ---
 
@@ -304,5 +304,5 @@ Follow along for daily updates and improvements.
 **Built with ❤️ to make coding more accessible and educational.**
 
 ```
-Made by Durga Prasad Chary
+Made by Govardhanachari Vadla
 ```
