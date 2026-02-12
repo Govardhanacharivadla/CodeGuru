@@ -1,256 +1,308 @@
-# 🧠 Explainer Agent
+# 🧠 CodeGuru - AI Coding Mentor
 
-An AI-powered code explanation tool that teaches you **why** code works, not just **what** it does.
+> Transform code confusion into crystal-clear understanding
 
-Unlike traditional code assistants that just describe code, Explainer Agent:
-- 📚 **Teaches concepts** - Explains the underlying computer science principles
-- 🎨 **Visualizes execution** - Auto-generates diagrams (flowcharts, sequence diagrams, call graphs)
-- 🎓 **Multi-level explanations** - Simple → Detailed → Deep conceptual understanding
-- 🔒 **100% Free & Private** - Runs locally using Ollama, no API costs
+**CodeGuru** is an AI-powered coding mentor that doesn't just explain code—it teaches you **why** it works. Built for developers who want to truly understand what they're building.
 
-## ✨ Features
-
-- **Multi-Level Explanations**
-  - Simple (ELI5): Plain English explanation
-  - Detailed: Step-by-step technical breakdown
-  - Deep: Conceptual understanding with CS principles
-
-- **Automatic Diagram Generation**
-  - Control flow diagrams
-  - Sequence diagrams for object interactions
-  - Call graphs showing function dependencies
-  - Class diagrams for OOP structures
-
-- **Educational Focus**
-  - Key concept definitions
-  - Common mistakes to avoid
-  - Best practices and patterns
-  - Links to learning resources
-
-- **Privacy-First Options**
-  - Use Groq (cloud, free) for fastest responses
-  - Use Ollama (local) for complete privacy
-  - Automatic failover between providers
-
-## 🚀 Quick Start
-
-**Choose your preferred setup:**
-
-### ⚡ Option 1: Groq (Fastest - 2 minutes)
-
-**Best for**: Fastest setup, best quality, no downloads
-
-1. **Get free API key** (no credit card):
-   - Visit https://console.groq.com
-   - Sign up with Google/GitHub
-   - Create API key
-
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure**:
-   ```bash
-   # Edit .env file
-   LLM_PROVIDER=groq
-   GROQ_API_KEY=your_key_here
-   ```
-
-4. **Test**:
-   ```bash
-   python demo.py
-   ```
-
-✅ **Done!** You have instant AI explanations with 70B model!
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Status: MVP](https://img.shields.io/badge/status-MVP-brightgreen.svg)]()
 
 ---
 
-### 🦙 Option 2: Ollama (Most Private - 10 minutes)
+## ✨ What Makes CodeGuru Different?
 
-**Best for**: Privacy, unlimited usage, offline work
+Unlike traditional AI assistants that just describe code, CodeGuru:
 
-1. **Install Ollama**:
-   - Download from https://ollama.com
-   - Run installer
-   - Restart terminal
-
-2. **Pull a model**:
-   ```bash
-   # Best for code (recommended)
-   ollama pull qwen2.5-coder:7b
-   
-   # OR faster download
-   ollama pull gemma:2b
-   ```
-
-3. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Configure**:
-   ```bash
-   # Edit .env file
-   LLM_PROVIDER=ollama
-   OLLAMA_MODEL=qwen2.5-coder:7b
-   ```
-
-5. **Test**:
-   ```bash
-   python demo.py
-   ```
-
-✅ **Done!** You have unlimited, private AI explanations!
+- 📚 **Teaches Concepts** - Explains underlying computer science principles
+- 🎓 **Multi-Level Learning** - Simple (ELI5) → Detailed → Deep conceptual
+- 🎨 **Visual Learning** - Auto-generates diagrams (flowcharts, sequence diagrams)
+- 🔒 **Privacy-First** - Choose between cloud (fast) or local (private)
+- 💰 **100% Free** - No API costs, works with free Groq tier or local Ollama
+- ⚡ **Lightning Fast** - Sub-second responses
 
 ---
 
-### 🔄 Switch Between Providers Anytime
+## 🚀 Quick Start (2 minutes)
+
+### Option 1: Groq (Fastest)
+
+```bash
+# 1. Get free API key from console.groq.com (no credit card!)
+# 2. Clone and setup
+git clone https://github.com/yourusername/CodeGuru.git
+cd CodeGuru/explainer-agent
+pip install -r requirements.txt
+
+# 3. Configure
+# Edit .env:
+LLM_PROVIDER=groq
+GROQ_API_KEY=your_key_here
+
+# 4. Test
+python demo.py
+```
+
+### Option 2: Ollama (Private & Unlimited)
+
+```bash
+# 1. Install Ollama from ollama.com
+# 2. Pull model
+ollama pull qwen2.5-coder:7b
+
+# 3. Setup
+pip install -r requirements.txt
+
+# 4. Configure  
+# Edit .env:
+LLM_PROVIDER=ollama
+OLLAMA_MODEL=qwen2.5-coder:7b
+
+# 5. Test
+python demo.py
+```
+
+---
+
+## 🎯 Features
+
+### 🎓 Educational Explanations
+- **Simple Mode**: Plain English, ELI5 style
+- **Detailed Mode**: Step-by-step technical breakdown  
+- **Deep Mode**: CS concepts, patterns, best practices
+- **All Mode**: Complete learning experience
+
+### 🎨 Automatic Diagrams
+- Control flow diagrams
+- Sequence diagrams for OOP
+- Call graphs showing dependencies
+- Class diagrams for architecture
+
+### 🔧 Multiple LLM Providers
+- **Groq**: Fast cloud AI (70B model, free tier)
+- **Ollama**: Private local AI (unlimited, offline)
+- **Auto-failover**: Seamless switching
+
+### 💡 Learning Focus
+- Key concept definitions
+- Common mistakes to avoid
+- Best practices and patterns  
+- Links to learning resources
+
+---
+
+## 📖 Usage Examples
+
+### Explain a Code Snippet
+
+```python
+from src.llm_client import llm_manager
+import asyncio
+
+async def explain():
+    code = """
+    async def fetch_data(url):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+            return response.json()
+    """
+    
+    prompt = f"Explain this code in detail:\n{code}"
+    explanation = await llm_manager.generate(prompt)
+    print(explanation)
+
+asyncio.run(explain())
+```
+
+### Learn a Concept
+
+```bash
+python -c "
+from src.llm_client import llm_manager
+import asyncio
+
+async def learn():
+    response = await llm_manager.generate(
+        'Explain dependency injection with Python examples'
+    )
+    print(response)
+
+asyncio.run(learn())
+"
+```
+
+### Switch Providers
 
 ```bash
 python switch_provider.py
-```
-
-**Or manually edit `.env`**:
-```env
-# For Groq (fast, cloud)
-LLM_PROVIDER=groq
-
-# For Ollama (private, local)
-LLM_PROVIDER=ollama
+# Interactive menu to switch between Groq and Ollama
 ```
 
 ---
 
 ## 📚 Documentation
 
-- **QUICK_REFERENCE.md** - Common commands and troubleshooting
-- **OLLAMA_SETUP.md** - Complete Ollama guide
-- **GROQ_SETUP.md** - Groq setup alternative
-- **SUCCESS.md** - What's working, usage examples
+- **[README.md](README.md)** - This file
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Common commands
+- **[OLLAMA_SETUP.md](OLLAMA_SETUP.md)** - Local AI setup
+- **[GROQ_SETUP.md](GROQ_SETUP.md)** - Cloud AI setup
+- **[SUCCESS.md](SUCCESS.md)** - Working features & examples
+- **[COMPLETE_SETUP.md](COMPLETE_SETUP.md)** - Full documentation
 
-## 📖 Usage
+---
 
-### Explain a Function
-
-```bash
-python -m src.cli explain --file utils.py --function process_data
-```
-
-### Explain an Entire File
-
-```bash
-python -m src.cli explain --file server.py
-```
-
-### Learn a Concept
-
-```bash
-python -m src.cli concept "event loop"
-```
-
-### Interactive Mode
-
-```bash
-python -m src.cli interactive
-```
-
-## 🎯 Example Output
+## 🏗️ Project Structure
 
 ```
-📝 Function: async_fetch_data()
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🔹 Simple Explanation:
-This function fetches data from a URL without blocking other code from running.
-
-🔹 Detailed Explanation:
-1. Marks function as async, enabling non-blocking operations
-2. Uses 'await' to pause execution until HTTP request completes
-3. Returns parsed JSON data to caller
-4. Can handle multiple requests concurrently
-
-🔹 Deep Dive:
-This implements asynchronous I/O using Python's event loop...
-
-🎓 Key Concepts:
-- Event Loop: Manages async task execution
-- Async/Await: Syntactic sugar for coroutines
-- Non-blocking I/O: Allows concurrent operations
-
-⚠️  Common Mistakes:
-- Forgetting 'await' keyword (returns coroutine object instead)
-- Not running in event loop context
-- Blocking operations inside async functions
-
-📊 Execution Flow Diagram:
-[Auto-generated Mermaid diagram showing async flow]
+CodeGuru/
+└── explainer-agent/
+    ├── src/
+    │   ├── cli.py              # Command-line interface
+    │   ├── llm_client.py       # Groq/Ollama integration
+    │   ├── explainer.py        # Explanation engine
+    │   ├── code_analyzer.py    # Tree-sitter parsing
+    │   ├── context_builder.py  # Context extraction
+    │   ├── diagram_generator.py # Mermaid diagrams
+    │   └── config.py           # Configuration
+    ├── demo.py                 # Quick demo
+    ├── switch_provider.py      # Provider switcher
+    ├── requirements.txt        # Dependencies
+    └── .env                    # Your configuration
 ```
 
-## 🏗️ Architecture
-
-```
-explainer-agent/
-├── src/
-│   ├── cli.py              # CLI interface
-│   ├── code_analyzer.py    # Tree-sitter parsing
-│   ├── context_builder.py  # Context extraction
-│   ├── explainer.py        # Explanation generation
-│   ├── diagram_generator.py # Mermaid diagrams
-│   ├── llm_client.py       # Ollama/Groq integration
-│   └── config.py           # Configuration
-└── tests/                  # Test suite
-```
+---
 
 ## 🔧 Configuration
 
-Edit `.env` to configure:
+Edit `.env` to customize:
 
 ```env
-# LLM Settings
-LLM_PROVIDER=ollama  # ollama or groq
-OLLAMA_MODEL=qwen2.5-coder:7b
-GROQ_API_KEY=  # Optional, for faster responses
+# LLM Provider (groq or ollama)
+LLM_PROVIDER=groq
 
-# Explanation Settings
-EXPLANATION_DEPTH=all  # simple, detailed, deep, or all
+# Groq Settings
+GROQ_API_KEY=your_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+
+# Ollama Settings  
+OLLAMA_MODEL=qwen2.5-coder:7b
+OLLAMA_BASE_URL=http://localhost:11434
+
+# Features
+EXPLANATION_DEPTH=all
 GENERATE_DIAGRAMS=true
 ```
+
+---
+
+## 🎯 Roadmap
+
+### ✅ MVP (Complete)
+- [x] Multi-level explanations
+- [x] Groq + Ollama support
+- [x] Beautiful CLI
+- [x] Configuration system
+- [x] Comprehensive docs
+
+### 🚧 Short-term (This Month)
+- [ ] Fix tree-sitter for full code parsing
+- [ ] Enable automatic diagram generation
+- [ ] Add more language support
+- [ ] Improve prompt engineering
+
+### 🔮 Long-term (Next Quarter)
+- [ ] Web interface
+- [ ] IDE plugins (VS Code, JetBrains)
+- [ ] Project-wide analysis
+- [ ] Code refactoring suggestions
+- [ ] Knowledge base/memory
+
+---
+
+## 🤝 Contributing
+
+We're building CodeGuru together! Contributions welcome:
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit your changes**: `git commit -m 'Add amazing feature'`
+4. **Push to branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+---
+
+## 📊 Tech Stack
+
+- **Python 3.11+** - Core language
+- **Groq API** - Fast cloud LLM (free tier)
+- **Ollama** - Local LLM runtime
+- **Tree-sitter** - Code parsing
+- **Rich** - Terminal UI
+- **Pydantic** - Configuration
+- **AsyncIO** - Async operations
+
+---
 
 ## 🎓 Supported Languages
 
 - ✅ Python
-- ✅ JavaScript/TypeScript
-- ✅ Rust
-- 🔜 Java, C++, Go (coming soon)
-
-## 🤝 Contributing
-
-This is an MVP prototype. Contributions welcome!
-
-## 📄 License
-
-MIT License
-
-## 🌟 Why This Exists
-
-Most AI coding tools just give you answers. This tool **teaches** you:
-- The 'why' behind code design decisions
-- Computer science concepts in practice
-- How to think like an experienced developer
-
-**Goal**: Make every developer 10x more capable by turning AI into a patient teacher.
-
-## 🔮 Roadmap
-
-- [ ] Web interface for better diagram rendering
-- [ ] Interactive code exploration mode
-- [ ] Support for more programming languages
-- [ ] Domain expertise (compilers, OS, databases)
-- [ ] Multi-codebase pattern learning
-- [ ] Team knowledge sharing features
+- ✅ JavaScript/TypeScript  
+- 🔜 Java, C++, Go, Rust (coming soon)
 
 ---
 
-Built with ❤️ to make coding more accessible and educational.
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 🌟 Why CodeGuru?
+
+**Most AI coding tools give you answers. CodeGuru teaches you.**
+
+Our goal: Make every developer 10x more capable by turning AI into a patient, knowledgeable mentor.
+
+---
+
+## 💡 Inspiration
+
+Built with the belief that:
+- Understanding > Memorizing
+- Teaching > Telling
+- Concepts > Code
+- Learning > Copying
+
+---
+
+## 🙏 Acknowledgments
+
+- [Groq](https://groq.com) for blazing-fast free API
+- [Ollama](https://ollama.com) for local LLM runtime
+- [Tree-sitter](https://tree-sitter.github.io/) for code parsing
+- [Rich](https://rich.readthedocs.io/) for beautiful terminal UI
+
+---
+
+## 📞 Support & Feedback
+
+- **Issues**: [GitHub Issues](https://github.com/yourusername/CodeGuru/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/CodeGuru/discussions)
+- **Email**: your.email@example.com
+
+---
+
+## 🚀 Daily Development
+
+We're building this in public!  
+Follow along for daily updates and improvements.
+
+**Star the repo** ⭐ to stay updated!
+
+---
+
+**Built with ❤️ to make coding more accessible and educational.**
+
+```
+Made by Durga Prasad Chary
+```
