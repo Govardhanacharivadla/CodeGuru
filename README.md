@@ -89,9 +89,36 @@ python demo.py
 - Best practices and patterns  
 - Links to learning resources
 
+### 💬 Interactive Q&A Chat (New!)
+- Ask any programming question
+- Get helpful hints if you're stuck
+- Conversation history for context
+- Natural chat interface with markdown formatting
+
 ---
 
 ## 📖 Usage Examples
+
+### Interactive Q&A Chat Mode
+
+**Start a chat session:**
+```bash
+python chat.py
+```
+
+**Ask any question:**
+```
+You: How do Python decorators work?
+CodeGuru: [Provides detailed explanation with examples]
+
+You: Can you show me a real-world example?
+CodeGuru: [Provides practical example]
+```
+
+**Get hints:**
+- Type `hints` to see suggested questions
+- Type `clear` to reset conversation
+- Type `exit` to quit
 
 ### Explain a Code Snippet
 
