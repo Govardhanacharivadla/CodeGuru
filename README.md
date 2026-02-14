@@ -177,6 +177,11 @@ python switch_provider.py
 - **[SUCCESS.md](SUCCESS.md)** - Working features & examples
 - **[COMPLETE_SETUP.md](COMPLETE_SETUP.md)** - Full documentation
 
+### 🎓 **New Tutorials**
+- **[Async Patterns Explained](examples/async_patterns.md)**
+- **[Python Decorators Deep Dive](examples/decorators_deep_dive.md)**
+- **[Django View Explanation](examples/django_view_explanation.md)**
+
 ---
 
 ## 🏗️ Project Structure
