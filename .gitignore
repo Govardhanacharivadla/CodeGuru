@@ -51,5 +51,10 @@ Thumbs.db
 # Project Specific
 outputs/
 diagrams/
+exports/
+chat_history.md
 *.svg
 *.png
+*.mmd
+.chat_history.json
+my_notes.md

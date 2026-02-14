@@ -82,15 +82,22 @@ async def chat_session():
             if not filename.endswith('.md'):
                 filename += '.md'
             
+            # Ensure exports directory exists
+            from pathlib import Path
+            exports_dir = Path("exports")
+            exports_dir.mkdir(exist_ok=True)
+            
+            output_path = exports_dir / filename
+            
             try:
-                with open(filename, 'w', encoding='utf-8') as f:
+                with open(output_path, 'w', encoding='utf-8') as f:
                     f.write("# CodeGuru Chat Session\n\n")
                     for i in range(0, len(chat_history), 2):
                         if i+1 < len(chat_history):
                             f.write(f"## Q: {chat_history[i]}\n\n")
                             f.write(f"{chat_history[i+1]}\n\n")
                             f.write("---\n\n")
-                console.print(f"\n[green]✅ Chat saved to {filename}[/green]\n")
+                console.print(f"\n[green]✅ Chat saved to {output_path}[/green]\n")
             except Exception as e:
                 console.print(f"\n[red]❌ Failed to save: {e}[/red]\n")
             continue
