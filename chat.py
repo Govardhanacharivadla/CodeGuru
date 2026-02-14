@@ -45,7 +45,7 @@ async def chat_session():
         "[bold cyan]🧠 CodeGuru Interactive Q&A[/bold cyan]\n\n"
         "Ask me anything about programming!\n"
         "I'll explain concepts, code patterns, and best practices.\n\n"
-        "[dim]Type 'hints' for question ideas or 'exit' to quit[/dim]",
+        "[dim]Type 'hints' for ideas, 'export' to save chat, or 'exit' to quit[/dim]",
         border_style="cyan"
     ))
     
@@ -75,6 +75,26 @@ async def chat_session():
             console.print("[dim]Chat history cleared[/dim]\n")
             continue
         
+        if question.lower().startswith('export'):
+            # Usage: export filename.md
+            parts = question.split()
+            filename = parts[1] if len(parts) > 1 else "chat_history.md"
+            if not filename.endswith('.md'):
+                filename += '.md'
+            
+            try:
+                with open(filename, 'w', encoding='utf-8') as f:
+                    f.write("# CodeGuru Chat Session\n\n")
+                    for i in range(0, len(chat_history), 2):
+                        if i+1 < len(chat_history):
+                            f.write(f"## Q: {chat_history[i]}\n\n")
+                            f.write(f"{chat_history[i+1]}\n\n")
+                            f.write("---\n\n")
+                console.print(f"\n[green]✅ Chat saved to {filename}[/green]\n")
+            except Exception as e:
+                console.print(f"\n[red]❌ Failed to save: {e}[/red]\n")
+            continue
+        
         if not question:
             console.print("[yellow]Please ask a question![/yellow]\n")
             continue
@@ -88,22 +108,21 @@ async def chat_session():
             if chat_history:
                 # Include last 2 exchanges for context
                 recent = chat_history[-4:]  # Last 2 Q&A pairs
-                context = "\nPrevious conversation:\n"
+                context = "Previous conversation:\n"
                 for i in range(0, len(recent), 2):
                     if i+1 < len(recent):
                         context += f"Q: {recent[i]}\nA: {recent[i+1][:200]}...\n"
+                context += "\n"
             
-            prompt = f"""{context}
-Current question: {question}
+            prompt = f"""{context}User Question: {question}
 
 Please provide a clear, educational answer that:
 1. Explains the concept simply
-2. Provides concrete examples
+2. Provides concrete code examples
 3. Mentions common pitfalls
 4. Suggests best practices
-5. Links related concepts if relevant
 
-Use markdown formatting for code blocks and emphasis.
+Use markdown formatting for code blocks.
 """
             
             # Get response

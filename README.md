@@ -117,6 +117,7 @@ CodeGuru: [Provides practical example]
 
 **Get hints:**
 - Type `hints` to see suggested questions
+- Type `export [filename]` to save conversation
 - Type `clear` to reset conversation
 - Type `exit` to quit
 
