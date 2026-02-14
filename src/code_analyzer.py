@@ -50,22 +50,37 @@ class CodeAnalyzer:
     def _initialize_parsers(self):
         """Initialize tree-sitter parsers for supported languages."""
         try:
-            from tree_sitter import Parser
-            from tree_sitter_languages import get_language, get_parser
+            from tree_sitter import Language, Parser
             
-            # Python parser
-            self.parsers["python"] = get_parser("python")
+            # Import language modules
+            try:
+                import tree_sitter_python as tspython
+                import tree_sitter_javascript as tsjavascript
+            except ImportError as e:
+                logger.error(f"Failed to import tree-sitter language modules: {e}")
+                logger.info("Install with: pip install tree-sitter-python tree-sitter-javascript")
+                raise
             
-            # JavaScript parser
-            self.parsers["javascript"] = get_parser("javascript")
-            self.parsers["typescript"] = get_parser("typescript")
+            # Build language objects
+            PY_LANGUAGE = Language(tspython.language())
+            JS_LANGUAGE = Language(tsjavascript.language())
             
-            logger.info(f"Initialized parsers for: {list(self.parsers.keys())}")
+            # Create parsers
+            py_parser = Parser(PY_LANGUAGE)
+            js_parser = Parser(JS_LANGUAGE)
+            ts_parser = Parser(JS_LANGUAGE)  # TypeScript uses JavaScript parser
             
-        except ImportError as e:
-            logger.error(f"Failed to import tree-sitter: {e}")
-            logger.info("Install with: pip install tree-sitter-languages")
-            raise
+            self.parsers["python"] = py_parser
+            self.parsers["javascript"] = js_parser
+            self.parsers["typescript"] = ts_parser
+            
+            logger.info(f"✅ Initialized parsers for: {list(self.parsers.keys())}")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize parsers: {e}")
+            logger.warning("Code parsing will be disabled. Install tree-sitter packages to enable.")
+            # Don't raise - allow system to work without parsing
+
     
     def analyze_file(self, file_path: str | Path) -> CodeStructure:
         """Analyze a code file and extract structure."""
@@ -279,6 +294,10 @@ class CodeAnalyzer:
         return None
 
 
-# NOTE: Commented out for now due to tree-sitter compatibility issues
-# Create analyzer instance manually when needed: code_analyzer = CodeAnalyzer()
-code_analyzer = None
+# Global code analyzer instance
+try:
+    code_analyzer = CodeAnalyzer()
+    logger.info("✅ Code analyzer initialized successfully")
+except Exception as e:
+    logger.warning(f"Code analyzer initialization failed: {e}")
+    code_analyzer = None
