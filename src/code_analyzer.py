@@ -119,8 +119,12 @@ class CodeAnalyzer:
             return self._analyze_python(root, code)
         elif language in ["javascript", "typescript"]:
             return self._analyze_javascript(root, code)
+        elif language == "java":
+            return self._analyze_java(root, code)
+        elif language in ["c", "cpp"]:
+            return self._analyze_cpp(root, code)
         else:
-            # Generic analysis
+            # Generic analysis for unsupported languages
             return CodeStructure(
                 language=language,
                 functions=[],
@@ -256,6 +260,145 @@ class CodeAnalyzer:
         
         return CodeStructure(
             language="javascript",
+            functions=functions,
+            classes=classes,
+            imports=imports,
+            complexity_score=len(functions) + len(classes) * 2
+        )
+    
+    def _analyze_java(self, root_node, code: str) -> CodeStructure:
+        """Analyze Java code structure."""
+        functions = []
+        classes = []
+        imports = []
+        
+        def extract_node_text(node):
+            return code[node.start_byte:node.end_byte] if node else ""
+        
+        def traverse(node):
+            # Java class declaration
+            if node.type == "class_declaration":
+                name_node = node.child_by_field_name("name")
+                body_node = node.child_by_field_name("body")
+                
+                if name_node:
+                    # Extract methods from class
+                    methods = []
+                    if body_node:
+                        for child in body_node.children:
+                            if child.type == "method_declaration":
+                                method_name = child.child_by_field_name("name")
+                                if method_name:
+                                    methods.append(FunctionInfo(
+                                        name=extract_node_text(method_name),
+                                        start_line=child.start_point[0] + 1,
+                                        end_line=child.end_point[0] + 1,
+                                        parameters=[],
+                                        body=extract_node_text(child.child_by_field_name("body")) if child.child_by_field_name("body") else ""
+                                    ))
+                    
+                    classes.append(ClassInfo(
+                        name=extract_node_text(name_node),
+                        start_line=node.start_point[0] + 1,
+                        end_line=node.end_point[0] + 1,
+                        methods=methods,
+                        base_classes=[]
+                    ))
+            
+            # Java import statement
+            elif node.type == "import_declaration":
+                imports.append(extract_node_text(node))
+            
+            for child in node.children:
+                traverse(child)
+        
+        traverse(root_node)
+        
+        return CodeStructure(
+            language="java",
+            functions=functions,
+            classes=classes,
+            imports=imports,
+            complexity_score=len(functions) + len(classes) * 2
+        )
+    
+    def _analyze_cpp(self, root_node, code: str) -> CodeStructure:
+        """Analyze C/C++ code structure."""
+        functions = []
+        classes = []
+        imports = []
+        
+        def extract_node_text(node):
+            return code[node.start_byte:node.end_byte] if node else ""
+        
+        def traverse(node):
+            # C++ class declaration
+            if node.type == "class_specifier":
+                name_node = node.child_by_field_name("name")
+                body_node = node.child_by_field_name("body")
+                
+                if name_node:
+                    methods = []
+                    if body_node:
+                        for child in body_node.children:
+                            if child.type == "function_definition":
+                                func_decl = child.child_by_field_name("declarator")
+                                if func_decl:
+                                    # Extract function name
+                                    func_name_node = None
+                                    for subchild in func_decl.children:
+                                        if subchild.type in ["field_identifier", "identifier"]:
+                                            func_name_node = subchild
+                                            break
+                                    
+                                    if func_name_node:
+                                        methods.append(FunctionInfo(
+                                            name=extract_node_text(func_name_node),
+                                            start_line=child.start_point[0] + 1,
+                                            end_line=child.end_point[0] + 1,
+                                            parameters=[],
+                                            body=""
+                                        ))
+                    
+                    classes.append(ClassInfo(
+                        name=extract_node_text(name_node),
+                        start_line=node.start_point[0] + 1,
+                        end_line=node.end_point[0] + 1,
+                        methods=methods,
+                        base_classes=[]
+                    ))
+            
+            # Function definition
+            elif node.type == "function_definition":
+                declarator = node.child_by_field_name("declarator")
+                if declarator:
+                    # Find the function name
+                    func_name_node = None
+                    for child in declarator.children:
+                        if child.type == "identifier":
+                            func_name_node = child
+                            break
+                    
+                    if func_name_node:
+                        functions.append(FunctionInfo(
+                            name=extract_node_text(func_name_node),
+                            start_line=node.start_point[0] + 1,
+                            end_line=node.end_point[0] + 1,
+                            parameters=[],
+                            body=""
+                        ))
+            
+            # Include statements
+            elif node.type == "preproc_include":
+                imports.append(extract_node_text(node))
+            
+            for child in node.children:
+                traverse(child)
+        
+        traverse(root_node)
+        
+        return CodeStructure(
+            language="cpp",
             functions=functions,
             classes=classes,
             imports=imports,
