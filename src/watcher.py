@@ -9,7 +9,6 @@ from watchdog.events import FileSystemEventHandler
 from .ui import ui, console
 from .explainer import explainer_engine
 from .errors import handle_error
-from .utils import debounce
 
 class CodeChangeHandler(FileSystemEventHandler):
     """Handle file system events."""

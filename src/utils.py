@@ -99,3 +99,23 @@ def ensure_dir(path: str | Path) -> Path:
     dir_path = Path(path)
     dir_path.mkdir(parents=True, exist_ok=True)
     return dir_path
+
+def debounce(wait_time: float):
+    """Decorator to debounce a function execution."""
+    import time
+    from functools import wraps
+    
+    def decorator(func):
+        last_called = 0
+        
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            nonlocal last_called
+            now = time.time()
+            if now - last_called >= wait_time:
+                last_called = now
+                return func(*args, **kwargs)
+            # optionally handle debouncing queue, but simple throttling is fine 
+            # for this use case as we just want to avoid multiple triggers
+        return wrapper
+    return decorator
