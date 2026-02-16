@@ -242,11 +242,26 @@ class CodeAnalyzer:
                 body_node = node.child_by_field_name("body")
                 
                 if name_node:
+                    # Extract methods from class body
+                    methods = []
+                    if body_node:
+                        for child in body_node.children:
+                            if child.type in ["method_definition", "field_definition"]:
+                                method_name_node = child.child_by_field_name("name")
+                                if method_name_node:
+                                    methods.append(FunctionInfo(
+                                        name=extract_node_text(method_name_node),
+                                        start_line=child.start_point[0] + 1,
+                                        end_line=child.end_point[0] + 1,
+                                        parameters=[],
+                                        body=extract_node_text(child.child_by_field_name("body")) if child.child_by_field_name("body") else ""
+                                    ))
+                    
                     classes.append(ClassInfo(
                         name=extract_node_text(name_node),
                         start_line=node.start_point[0] + 1,
                         end_line=node.end_point[0] + 1,
-                        methods=[],  # TODO: Extract methods
+                        methods=methods,
                         base_classes=[]
                     ))
             
