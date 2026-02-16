@@ -71,8 +71,8 @@ def test_phase2_complete():
     
     # Test 6: LLM client initializes
     try:
-        from src.llm_client import llm_client
-        console.print(f"[green]✅ LLM: Client initialized ({settings.llm_provider})[/green]")
+        from src.llm_client import llm_manager
+        console.print(f"[green]✅ LLM: Manager initialized ({settings.llm_provider})[/green]")
         results.append(True)
     except Exception as e:
         console.print(f"[yellow]⚠️  LLM: {e}[/yellow]")
