@@ -13,20 +13,25 @@ from .utils import logger
 class ExplainerEngine:
     """Generates educational explanations of code."""
     
-    SYSTEM_PROMPT = """You are an expert programming teacher and computer science educator.
+    SYSTEM_PROMPT = """You are CodeGuru, an expert programming teacher specializing in making complex code easy to understand.
 
-Your goal is to help developers DEEPLY UNDERSTAND code, not just know what it does.
+Your teaching philosophy:
+- Transform confusion into clarity through structured explanations
+- Teach WHY before HOW - explain the reasoning behind design decisions
+- Use real-world analogies to make abstract concepts concrete
+- Emphasize practical application over theory
+- Point out common pitfalls to accelerate learning
 
-For every piece of code you explain, you must:
-1. Explain WHAT it does (surface-level description)
-2. Explain HOW it works (step-by-step implementation details)
-3. Explain WHY it's designed this way (architectural reasoning, design patterns)
-4. Teach key CONCEPTS (computer science principles, not just syntax)
-5. Highlight common MISTAKES people make with similar code
-6. Share BEST PRACTICES and alternative approaches
+For every code explanation, structure your response to answer:
+1. **What**: One-sentence summary of purpose
+2. **How**: Step-by-step breakdown of implementation
+3. **Why**: Design rationale and architectural choices
+4. **Concepts**: Core CS principles being applied (with definitions)
+5. **Pitfalls**: Common mistakes developers make with similar code
+6. **Best Practices**: Industry-standard approaches
 
-Always assume the user wants to LEARN and become a better developer, not just get a quick answer.
-Be thorough but clear. Use analogies when helpful. Explain terminology."""
+Always use markdown formatting with code blocks, headers, and emphasis.
+Write like you're teaching a colleague who wants to deeply understand, not just copy-paste."""
 
     def __init__(self):
         """Initialize explainer engine."""
@@ -72,16 +77,33 @@ Be thorough but clear. Use analogies when helpful. Explain terminology."""
         
         prompt = f"""Explain the programming concept: "{concept_name}"
 
-Provide:
-1. Clear definition
-2. Why it exists and what problem it solves
-3. How it works (with simple code examples)
-4. When to use it vs when not to
-5. Common mistakes and misconceptions
-6. Best practices
-7. Related concepts
+Structure your explanation:
 
-Make it educational and thorough."""
+## Definition
+Clear, concise definition in one sentence.
+
+## The Problem It Solves
+Why does this concept exist? What problem does it address?
+
+## How It Works
+Step-by-step breakdown with simple code examples.
+
+## When To Use It
+Practical scenarios where this concept shines.
+
+## When NOT To Use It
+Cases where alternatives are better.
+
+## Common Mistakes
+Typical errors developers make.
+
+## Best Practices
+Industry-standard approaches.
+
+## Related Concepts
+Other topics to explore.
+
+Use markdown formatting and code examples."""
 
         response = await self.llm.generate(
             prompt=prompt,
@@ -147,50 +169,68 @@ Make it educational and thorough."""
         
         # Add context information
         if context.element_name:
-            prompt += f"Element name: {context.element_name}\n"
+            prompt += f"**Element**: `{context.element_name}`\n"
         
         if context.docstring:
-            prompt += f"Existing docstring: {context.docstring}\n"
+            prompt += f"**Existing docs**: {context.docstring}\n"
         
         if context.imports:
-            prompt += f"\nImports in file:\n"
+            prompt += f"\n**Imports**:\n"
             for imp in context.imports[:5]:  # Limit to first 5
-                prompt += f"- {imp}\n"
+                prompt += f"- `{imp}`\n"
         
         if context.dependencies:
-            prompt += f"\nDepends on: {', '.join(context.dependencies[:5])}\n"
+            prompt += f"\n**Dependencies**: {', '.join(f'`{d}`' for d in context.dependencies[:5])}\n"
         
-        prompt += f"\nComplexity score: {context.complexity}\n"
+        prompt += f"\n**Complexity**: {context.complexity}/10\n\n---\n\n"
         
-        # Specify desired depth
+        # Specify desired depth with clear instructions
         if depth == "all" or depth == "simple":
-            prompt += "\n**Simple explanation (ELI5)**: Explain in plain English what this code does."
+            prompt += """## Simple Explanation (ELI5)
+Explain what this code does in plain English. Imagine explaining to a non-programmer.
+
+"""
         
         if depth == "all" or depth == "detailed":
-            prompt += "\n**Detailed explanation**: Step-by-step breakdown of how it works."
+            prompt += """## Detailed Breakdown
+Step-by-step walkthrough of how the code works. Include:
+- What each major section does
+- How data flows through the code
+- Any notable techniques or patterns
+
+"""
         
         if depth == "all" or depth == "deep":
-            prompt += "\n**Deep dive**: Explain the underlying concepts, why it's designed this way, design patterns used."
-        
-        prompt += """
+            prompt += """## Deep Dive
+Explain the computer science concepts and design decisions:
+- Why is it structured this way?
+- What design patterns or paradigms are used?
+- What are the trade-offs in this approach?
+- How does it relate to broader system architecture?
 
-Provide your response in JSON format with these fields:
+"""
+        
+        prompt += """---
+
+Provide your response in JSON format:
+```json
 {
-  "summary": "One sentence summary",
-  "simple_explanation": "ELI5 explanation",
-  "detailed_explanation": "Technical step-by-step breakdown",
-  "deep_dive": "Conceptual understanding and design rationale",
+  "summary": "One crisp sentence summarizing the purpose",
+  "simple_explanation": "ELI5 version in 2-3 sentences",
+  "detailed_explanation": "Technical step-by-step breakdown (markdown formatted)",
+  "deep_dive": "Conceptual analysis and design rationale (markdown formatted)",
   "key_concepts": [
     {
-      "name": "Concept name",
-      "definition": "Clear definition",
+      "name": "Concept Name",
+      "definition": "Clear definition with context",
       "related_topics": ["topic1", "topic2"]
     }
   ],
-  "common_mistakes": ["mistake 1", "mistake 2"],
-  "best_practices": ["practice 1", "practice 2"],
-  "related_resources": ["resource 1", "resource 2"]
+  "common_mistakes": ["Specific mistake with example", "Another mistake"],
+  "best_practices": ["Concrete practice with reasoning", "Another practice"],
+  "related_resources": ["Python docs: functools", "Design Patterns book"]
 }
+```
 """
         
         return prompt

@@ -95,6 +95,13 @@ python demo.py
 - Conversation history for context
 - Natural chat interface with markdown formatting
 
+### 🌐 Multi-Language Support
+- ✅ Python
+- ✅ JavaScript / TypeScript
+- ✅ Java
+- ✅ C / C++
+- 🔜 Go, Rust, PHP (coming soon)
+
 ---
 
 ## 📖 Usage Examples

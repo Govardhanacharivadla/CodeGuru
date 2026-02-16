@@ -56,23 +56,33 @@ class CodeAnalyzer:
             try:
                 import tree_sitter_python as tspython
                 import tree_sitter_javascript as tsjavascript
+                import tree_sitter_java as tsjava
+                import tree_sitter_cpp as tscpp
             except ImportError as e:
                 logger.error(f"Failed to import tree-sitter language modules: {e}")
-                logger.info("Install with: pip install tree-sitter-python tree-sitter-javascript")
+                logger.info("Install with: pip install tree-sitter-python tree-sitter-javascript tree-sitter-java tree-sitter-cpp")
                 raise
             
             # Build language objects
             PY_LANGUAGE = Language(tspython.language())
             JS_LANGUAGE = Language(tsjavascript.language())
+            JAVA_LANGUAGE = Language(tsjava.language())
+            CPP_LANGUAGE = Language(tscpp.language())
             
             # Create parsers
             py_parser = Parser(PY_LANGUAGE)
             js_parser = Parser(JS_LANGUAGE)
             ts_parser = Parser(JS_LANGUAGE)  # TypeScript uses JavaScript parser
+            java_parser = Parser(JAVA_LANGUAGE)
+            cpp_parser = Parser(CPP_LANGUAGE)
+            c_parser = Parser(CPP_LANGUAGE)  # C uses C++ parser
             
             self.parsers["python"] = py_parser
             self.parsers["javascript"] = js_parser
             self.parsers["typescript"] = ts_parser
+            self.parsers["java"] = java_parser
+            self.parsers["cpp"] = cpp_parser
+            self.parsers["c"] = c_parser
             
             logger.info(f"✅ Initialized parsers for: {list(self.parsers.keys())}")
             
