@@ -23,44 +23,70 @@ Unlike traditional AI assistants that just describe code, CodeGuru:
 
 ---
 
-## 🚀 Quick Start (2 minutes)
+## 🚀 Quick Start
 
-### Option 1: Groq (Fastest)
+1. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-```bash
-# 1. Get free API key from console.groq.com (no credit card!)
-# 2. Clone and setup
-git clone https://github.com/Govardhanacharivadla/CodeGuru.git
-cd CodeGuru/explainer-agent
-pip install -r requirements.txt
+2. **Configure AI Provider**
+   Edit `.env` file to choose between Groq (Cloud) or Ollama (Local).
+   ```ini
+   LLM_PROVIDER=groq  # or ollama
+   ```
 
-# 3. Configure
-# Edit .env:
-LLM_PROVIDER=groq
-GROQ_API_KEY=your_key_here
+3. **Run CodeGuru**
+   
+   **Interactive Demo:**
+   ```bash
+   python codeguru.py demo
+   ```
 
-# 4. Test
-python demo.py
-```
+   **Explain Code:**
+   ```bash
+   python codeguru.py explain main.py
+   python codeguru.py explain utils.py --function process_data
+   ```
 
-### Option 2: Ollama (Private & Unlimited)
+   **Watch Mode (Real-time):**
+   ```bash
+   python codeguru.py watch main.py
+   ```
+   *CodeGuru will auto-explain whenever you save changes!*
 
-```bash
-# 1. Install Ollama from ollama.com
-# 2. Pull model
-ollama pull qwen2.5-coder:7b
+   **Learn Concepts:**
+   ```bash
+   python codeguru.py concept "Middleware patterns"
+   ```
 
-# 3. Setup
-pip install -r requirements.txt
+   **Chat Mode:**
+   ```bash
+   python codeguru.py chat
+   ```
 
-# 4. Configure  
-# Edit .env:
-LLM_PROVIDER=ollama
-OLLAMA_MODEL=qwen2.5-coder:7b
+---
 
-# 5. Test
-python demo.py
-```
+## 🎯 Features
+
+### 🧠 AI Explanations
+Get crystal-clear explanations of your code.
+- **Simple**: Plain English for beginners
+- **Detailed**: Step-by-step logic breakdown
+- **Deep**: Architecture and design patterns
+- **All**: Comprehensive analysis
+
+### 👁️ Real-Time Watch Mode
+Working on tricky code? Run `codeguru watch file.py` in a separate terminal. CodeGuru will re-analyze and explain your code every time you save, acting as a real-time pair programmer.
+
+### 🎨 Visual Diagrams
+Auto-generates Mermaid diagrams for classes and function flows. Copy-paste the output to [Mermaid Live](https://mermaid.live).
+
+### 🌐 Multi-Language Support
+- ✅ Python
+- ✅ JavaScript / TypeScript
+- ✅ Java
+- ✅ C / C++
 
 ---
 

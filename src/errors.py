@@ -1,7 +1,7 @@
 """User-friendly error handling with helpful suggestions."""
 
 from pathlib import Path
-from .ui import ui
+from .ui import ui, console
 
 
 class CodeGuruError(Exception):

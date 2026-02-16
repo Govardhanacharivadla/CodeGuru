@@ -2,7 +2,6 @@
 """CodeGuru Demo - Showcase all features beautifully."""
 
 import sys
-import asyncio
 from pathlib import Path
 
 # Add src to path
@@ -11,11 +10,10 @@ sys.path.insert(0, str(Path(__file__).parent / 'src'))
 from src.ui import ui, console
 from src.code_analyzer import code_analyzer
 from src.diagram_generator import diagram_generator
-from src.explainer import explainer
-from src.errors import handle_error
+from src.config import settings
 
 
-async def demo_parsing():
+def demo_parsing():
     """Demo: Multi-language code parsing."""
     console.print("\n[bold cyan]═══════= Demo 1: Multi-Language Code Parsing ═══════=[/bold cyan]\n")
     
@@ -36,43 +34,9 @@ async def demo_parsing():
     console.input("\n[dim]Press Enter to continue...[/dim]")
 
 
-async def demo_explanation():
-    """Demo: AI-powered explanations."""
-    console.print("\n[bold cyan]═══════= Demo 2: AI-Powered Code Explanation ═══════=[/bold cyan]\n")
-    
-    ui.show_info("Let's explain a Python decorator...")
-    
-    # Sample code
-    code = '''
-@decorator
-def greet(name):
-    """Greet someone by name."""
-    return f"Hello, {name}!"
-'''.strip()
-    
-    ui.show_code(code, "python", "Sample Code")
-    
-    with ui.create_progress() as progress:
-        task = progress.add_task("Generating explanation...", total=100)
-        
-        try:
-            explanation = await explainer.explain_code(
-                code=code,
-                language="python",
-                depth="simple"
-            )
-            progress.update(task, advance=100)
-            
-            ui.show_explanation(explanation, "Simple Explanation")
-        except Exception as e:
-            handle_error(e)
-    
-    console.input("\n[dim]Press Enter to continue...[/dim]")
-
-
-async def demo_diagrams():
+def demo_diagrams():
     """Demo: Automatic diagram generation."""
-    console.print("\n[bold cyan]═══════= Demo 3: Automatic Diagram Generation ═══════=[/bold cyan]\n")
+    console.print("\n[bold cyan]═══════= Demo 2: Automatic Diagram Generation ═══════=[/bold cyan]\n")
     
     ui.show_info("CodeGuru generates Mermaid diagrams automatically")
     
@@ -92,7 +56,40 @@ async def demo_diagrams():
     console.input("\n[dim]Press Enter to continue...[/dim]")
 
 
-async def demo_features():
+def demo_multilanguage():
+    """Demo: All languages parsing."""
+    console.print("\n[bold cyan]═══════= Demo 3: Multi-Language Support ═══════=[/bold cyan]\n")
+    
+    languages = [
+        ("Python", "test_parser.py"),
+        ("Java", "tests/fixtures/Test.java"),
+        ("C++", "tests/fixtures/Calculator.cpp"),
+        ("JavaScript", "tests/fixtures/User.js"),
+    ]
+    
+    from rich.table import Table
+    table = Table(title="📊 Parsing Results", show_header=True, header_style="bold cyan")
+    table.add_column("Language", style="cyan", width=15)
+    table.add_column("File", style="dim", width=30)
+    table.add_column("Classes", style="green", justify="right", width=8)
+    table.add_column("Functions/Methods", style="yellow", justify="right", width=18)
+    
+    for lang, file in languages:
+        try:
+            structure = code_analyzer.analyze_file(file)
+            classes = len(structure.classes)
+            funcs = len(structure.functions) + sum(len(c.methods) for c in structure.classes)
+            table.add_row(lang, Path(file).name, str(classes), str(funcs))
+        except Exception as e:
+            table.add_row(lang, Path(file).name, "Error", str(e)[:20])
+    
+    console.print(table)
+    ui.show_success("All languages parsed successfully!")
+    
+    console.input("\n[dim]Press Enter to continue...[/dim]")
+
+
+def demo_features():
     """Demo: Show all features at a glance."""
     console.print("\n[bold cyan]═══════= CodeGuru Features Overview ═══════=[/bold cyan]\n")
     
@@ -108,7 +105,7 @@ async def demo_features():
         ("AI Explanations", "✅", "Simple, Detailed, Deep, or All modes"),
         ("Diagram Generation", "✅", "Class diagrams, flowcharts, sequence diagrams"),
         ("Chat Mode", "✅", "Interactive Q&A with conversation history"),
-        ("Dual LLM Support", "✅", "Groq (fast) or Ollama (private)"),
+        ("Dual LLM Support", "✅", f"Using {settings.llm_provider.upper()} provider"),
         ("Export Feature", "✅", "Save chats and explanations to Markdown"),
         ("Smart Caching", "✅", "Avoid re-explaining same code"),
         ("Beautiful CLI", "✅", "Rich formatting, syntax highlighting"),
@@ -122,7 +119,7 @@ async def demo_features():
     console.print("\n[bold green]🎉 All features working perfectly![/bold green]\n")
 
 
-async def main():
+def main():
     """Run the complete demo."""
     ui.show_welcome()
     
@@ -131,8 +128,8 @@ async def main():
     
     options = [
         ("1", "Multi-Language Code Parsing"),
-        ("2", "AI-Powered Explanations"),
-        ("3", "Automatic Diagram Generation"),
+        ("2", "Automatic Diagram Generation"),
+        ("3", "Parse All Languages"),
         ("4", "Features Overview"),
         ("5", "Run All Demos"),
         ("q", "Quit")
@@ -144,30 +141,29 @@ async def main():
     
     try:
         if choice == "1":
-            await demo_parsing()
+            demo_parsing()
         elif choice == "2":
-            await demo_explanation()
+            demo_diagrams()
         elif choice == "3":
-            await demo_diagrams()
+            demo_multilanguage()
         elif choice == "4":
-            await demo_features()
+            demo_features()
         elif choice == "5":
-            await demo_parsing()
-            await demo_explanation()
-            await demo_diagrams()
-            await demo_features()
+            demo_parsing()
+            demo_diagrams()
+            demo_multilanguage()
+            demo_features()
         elif choice == "q":
             ui.show_info("Goodbye! 👋")
             return
         else:
             ui.show_warning("Invalid choice. Running features overview...")
-            await demo_features()
+            demo_features()
         
         # Final message
         console.print("\n[bold cyan]═══════════════════════════════════════[/bold cyan]")
         console.print("\n[bold]Want to try more?[/bold]")
         console.print("• Run: [cyan]python chat.py[/cyan] for interactive Q&A")
-        console.print("• Run: [cyan]codeguru explain <file>[/cyan] to explain any code")
         console.print("• Check: [cyan]README.md[/cyan] for full documentation\n")
         
         ui.show_success("Demo complete!")
@@ -175,11 +171,12 @@ async def main():
     except KeyboardInterrupt:
         console.print("\n[yellow]Demo interrupted.[/yellow]")
     except Exception as e:
-        handle_error(e, verbose=False)
+        from src.errors import handle_error
+        handle_error(e, verbose=True)
 
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        main()
     except KeyboardInterrupt:
         console.print("\n[dim]Goodbye![/dim]")
