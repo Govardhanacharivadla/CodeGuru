@@ -60,7 +60,7 @@ class Settings(BaseSettings):
         description="Maximum file size to analyze in KB"
     )
     supported_languages: str = Field(
-        default="python,javascript,typescript,rust",
+        default="python,javascript,typescript,java,c,cpp,rust",
         description="Comma-separated list of supported languages"
     )
     
